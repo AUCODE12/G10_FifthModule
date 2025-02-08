@@ -30,7 +30,7 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
             .WithOne(p => p.Account)
             .HasForeignKey(p => p.AccountId);
 
-        builder.HasMany(a => a.Followers)
-            .WithMany(a => a.Following);
+        //builder.HasMany(a => a.Followers)
+        //    .WithMany(a => a.Following);
     }
 }

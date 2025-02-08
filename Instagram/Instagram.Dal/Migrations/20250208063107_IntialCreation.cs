@@ -26,29 +26,6 @@ namespace Instagram.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AccountAccount",
-                columns: table => new
-                {
-                    FollowersAccountId = table.Column<long>(type: "bigint", nullable: false),
-                    FollowingAccountId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AccountAccount", x => new { x.FollowersAccountId, x.FollowingAccountId });
-                    table.ForeignKey(
-                        name: "FK_AccountAccount_Account_FollowersAccountId",
-                        column: x => x.FollowersAccountId,
-                        principalTable: "Account",
-                        principalColumn: "AccountId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AccountAccount_Account_FollowingAccountId",
-                        column: x => x.FollowingAccountId,
-                        principalTable: "Account",
-                        principalColumn: "AccountId");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Post",
                 columns: table => new
                 {
@@ -99,8 +76,7 @@ namespace Instagram.Dal.Migrations
                         name: "FK_Comment_Post_PostId",
                         column: x => x.PostId,
                         principalTable: "Post",
-                        principalColumn: "PostId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "PostId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -108,11 +84,6 @@ namespace Instagram.Dal.Migrations
                 table: "Account",
                 column: "UserName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AccountAccount_FollowingAccountId",
-                table: "AccountAccount",
-                column: "FollowingAccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comment_AccountId",
@@ -138,9 +109,6 @@ namespace Instagram.Dal.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "AccountAccount");
-
             migrationBuilder.DropTable(
                 name: "Comment");
 

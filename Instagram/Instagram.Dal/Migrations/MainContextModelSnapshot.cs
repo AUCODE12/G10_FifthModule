@@ -22,21 +22,6 @@ namespace Instagram.Dal.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AccountAccount", b =>
-                {
-                    b.Property<long>("FollowersAccountId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("FollowingAccountId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("FollowersAccountId", "FollowingAccountId");
-
-                    b.HasIndex("FollowingAccountId");
-
-                    b.ToTable("AccountAccount");
-                });
-
             modelBuilder.Entity("Instagram.Dal.Entities.Account", b =>
                 {
                     b.Property<long>("AccountId")
@@ -123,21 +108,6 @@ namespace Instagram.Dal.Migrations
                     b.ToTable("Post", (string)null);
                 });
 
-            modelBuilder.Entity("AccountAccount", b =>
-                {
-                    b.HasOne("Instagram.Dal.Entities.Account", null)
-                        .WithMany()
-                        .HasForeignKey("FollowersAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Instagram.Dal.Entities.Account", null)
-                        .WithMany()
-                        .HasForeignKey("FollowingAccountId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Instagram.Dal.Entities.Comment", b =>
                 {
                     b.HasOne("Instagram.Dal.Entities.Account", "Account")
@@ -148,12 +118,13 @@ namespace Instagram.Dal.Migrations
 
                     b.HasOne("Instagram.Dal.Entities.Comment", "ParentComment")
                         .WithMany("Replies")
-                        .HasForeignKey("ParentCommentId");
+                        .HasForeignKey("ParentCommentId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Instagram.Dal.Entities.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Account");

@@ -1,4 +1,6 @@
 
+using Instagram.Bll.Services;
+using Instagram.Repository.Services;
 using Instagram.Server.Configurations;
 
 namespace Instagram.Server
@@ -17,6 +19,9 @@ namespace Instagram.Server
             builder.Services.AddSwaggerGen();
 
             builder.ConfigureDatabase();
+
+            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+            builder.Services.AddScoped<ICommentService, CommentService>();
 
             var app = builder.Build();
 

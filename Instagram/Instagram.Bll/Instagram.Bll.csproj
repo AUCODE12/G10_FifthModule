@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Instagram.Repository\Instagram.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MappingProfiles\" />
+  </ItemGroup>
+
 </Project>
