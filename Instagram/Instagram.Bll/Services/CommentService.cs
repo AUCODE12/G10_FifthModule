@@ -1,4 +1,6 @@
-﻿using Instagram.Bll.Dtos;
+﻿using AutoMapper;
+using FluentValidation;
+using Instagram.Bll.Dtos;
 using Instagram.Dal.Entities;
 using Instagram.Repository.Services;
 
@@ -7,22 +9,28 @@ namespace Instagram.Bll.Services;
 public class CommentService : ICommentService
 {
     private readonly ICommentRepository CommentRepository;
+    private readonly IValidator<CommentCreateDto> CommentCreateDtoValidator;
+    private readonly IMapper Mapper;
 
-    public CommentService(ICommentRepository commentRepository)
+    public CommentService(ICommentRepository commentRepository,
+        IValidator<CommentCreateDto> commentCreateDtoValidator,
+        IMapper mapper)
     {
         CommentRepository = commentRepository;
+        CommentCreateDtoValidator = commentCreateDtoValidator;
+        Mapper = mapper;
     }
 
     public async Task<long> AddAsync(CommentCreateDto commentCreateDto)
     {
-        var comment = new Comment()
-        {
-            Body = commentCreateDto.Body,
-            PostId = commentCreateDto.PostId,
-            AccountId = commentCreateDto.AccountId,
-            ParentCommentId = commentCreateDto.ParentCommentId,
-        };
+        var validatorRes = await CommentCreateDtoValidator.ValidateAsync(commentCreateDto);
 
+        if (validatorRes.IsValid == false)
+        {
+            throw new ValidationException($"{string.Join(',', validatorRes.Errors)}");
+        }
+
+        var comment = Mapper.Map<Comment>(commentCreateDto);
         comment.CreatedTime = DateTime.UtcNow;
 
         return await CommentRepository.AddCommentAsync(comment);
@@ -32,7 +40,9 @@ public class CommentService : ICommentService
     {
         var comments = await CommentRepository.GetAllCommentsAsync();
 
-        var commentGetDtos = ConvertToCommentGetDtos(comments);
+        //var commentGetDtos = ConvertToCommentGetDtos(comments);
+
+        var commentGetDtos = comments.Select(c => Mapper.Map<CommentGetDto>(c)).ToList();
 
         return commentGetDtos;
     }
@@ -57,7 +67,7 @@ public class CommentService : ICommentService
     private List<CommentGetDto> ConvertToCommentGetDtos(List<Comment> comments)
     {
         var commentGetDtos = new List<CommentGetDto>();
-        foreach(Comment comment in comments)
+        foreach (Comment comment in comments)
         {
             var commentGetDto = new CommentGetDto()
             {
