@@ -4,14 +4,11 @@ using Instagram.Dal.Entities;
 
 namespace Instagram.Bll.MappingProfiles;
 
-public class CommentProfile : Profile
+public class PostProfile : Profile
 {
-    public CommentProfile()
+    public PostProfile()
     {
-        CreateMap<CommentCreateDto, Comment>()
+        CreateMap<PostCreateDto, Post>()
                 .ForMember(dest => dest.CreatedTime, opt => opt.MapFrom(_ => DateTime.UtcNow));
-
-
-        CreateMap<Comment, CommentGetDto>();
     }
 }

@@ -21,9 +21,8 @@ public class Program
         builder.ConfigureDatabase();
         builder.ConfigureValidators();
         builder.ConfigureAutoMappers();
-
-        builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-        builder.Services.AddScoped<ICommentService, CommentService>();
+        builder.ConfigureDependencyInjection();
+        
 
         var app = builder.Build();
 
