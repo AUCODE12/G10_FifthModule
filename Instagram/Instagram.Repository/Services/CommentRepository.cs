@@ -75,4 +75,9 @@ public class CommentRepository : ICommentRepository
 
         return comment;
     }
+
+    public async Task<bool> CommentExistsAsync(long id)
+    {
+        return await MainContext.Comments.AnyAsync(c => c.CommentId == id);
+    }
 }

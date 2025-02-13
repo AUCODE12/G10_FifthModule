@@ -29,8 +29,5 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder.HasMany(a => a.Comments)
             .WithOne(p => p.Account)
             .HasForeignKey(p => p.AccountId);
-
-        //builder.HasMany(a => a.Followers)
-        //    .WithMany(a => a.Following);
     }
 }

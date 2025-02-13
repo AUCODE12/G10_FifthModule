@@ -1,9 +1,7 @@
 
-using Instagram.Bll.Services;
-using Instagram.Repository.Services;
 using Instagram.Server.Configurations;
 
-namespace Instagram.Server
+namespace CarRentalSystem.Api
 {
     public class Program
     {
@@ -19,10 +17,6 @@ namespace Instagram.Server
             builder.Services.AddSwaggerGen();
 
             builder.ConfigureDatabase();
-            builder.ConfigureValidators();
-
-            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-            builder.Services.AddScoped<ICommentService, CommentService>();
 
             var app = builder.Build();
 

@@ -1,20 +1,31 @@
-﻿using Instagram.Bll.Dtos;
+﻿using FluentValidation;
+using Instagram.Bll.Dtos;
 using Instagram.Dal.Entities;
 using Instagram.Repository.Services;
+using System.Linq;
 
 namespace Instagram.Bll.Services;
 
 public class CommentService : ICommentService
 {
     private readonly ICommentRepository CommentRepository;
+    private readonly IValidator<CommentCreateDto> CommentCreateDtoValidator;
 
-    public CommentService(ICommentRepository commentRepository)
+    public CommentService(ICommentRepository commentRepository, IValidator<CommentCreateDto> commentCreateDtoValidator)
     {
         CommentRepository = commentRepository;
+        CommentCreateDtoValidator = commentCreateDtoValidator;
     }
 
     public async Task<long> AddAsync(CommentCreateDto commentCreateDto)
     {
+        var validationResult = await CommentCreateDtoValidator.ValidateAsync(commentCreateDto);
+
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
+
         var comment = new Comment()
         {
             Body = commentCreateDto.Body,
