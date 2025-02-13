@@ -25,7 +25,7 @@ public class CommentCreateDtoValidator : AbstractValidator<CommentCreateDto>
             .GreaterThanOrEqualTo(1).WithMessage("Account id should be 0 <")
             .Must(true).WithMessage("");
     }
-
+    
     private async Task<bool> ParentCommentExists(long? parentCommentId, CancellationToken cancellationToken)
     {
         if(parentCommentId == null) return true;

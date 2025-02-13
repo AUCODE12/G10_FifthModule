@@ -24,24 +24,6 @@ public class CommentRepository : ICommentRepository
 
     public async Task<List<Comment>> GetAllCommentsAsync()
     {
-        //var accaunts = MainContext.Accounts
-        //    .Include(a => a.Posts)
-        //    .Include(a => a.Comments)
-        //    .ToList();
-
-        var accaunt = MainContext.Accounts.FirstOrDefault(a => a.AccountId == 1);
-
-        await MainContext.Entry(accaunt)
-            .Collection(a => a.Comments)
-            .LoadAsync();
-
-
-        foreach(var aC in accaunt.Comments)
-        {
-            await LoadCommentsAsync(aC);
-        }
-
-
         var comments = await MainContext.Comments.ToListAsync();
 
         return comments;

@@ -28,12 +28,10 @@ public class CommentService : ICommentService
 
         var comment = new Comment()
         {
-            Body = commentCreateDto.Body,
-            PostId = commentCreateDto.PostId,
-            AccountId = commentCreateDto.AccountId,
-            ParentCommentId = commentCreateDto.ParentCommentId,
-        };
+            throw new ValidationException($"{string.Join(',', validatorRes.Errors)}");
+        }
 
+        var comment = Mapper.Map<Comment>(commentCreateDto);
         comment.CreatedTime = DateTime.UtcNow;
 
         return await CommentRepository.AddCommentAsync(comment);
@@ -43,7 +41,9 @@ public class CommentService : ICommentService
     {
         var comments = await CommentRepository.GetAllCommentsAsync();
 
-        var commentGetDtos = ConvertToCommentGetDtos(comments);
+        //var commentGetDtos = ConvertToCommentGetDtos(comments);
+
+        var commentGetDtos = comments.Select(c => Mapper.Map<CommentGetDto>(c)).ToList();
 
         return commentGetDtos;
     }
@@ -68,7 +68,7 @@ public class CommentService : ICommentService
     private List<CommentGetDto> ConvertToCommentGetDtos(List<Comment> comments)
     {
         var commentGetDtos = new List<CommentGetDto>();
-        foreach(Comment comment in comments)
+        foreach (Comment comment in comments)
         {
             var commentGetDto = new CommentGetDto()
             {

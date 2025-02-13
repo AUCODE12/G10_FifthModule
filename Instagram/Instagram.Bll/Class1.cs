@@ -1,7 +1,6 @@
-﻿namespace Instagram.Bll
-{
-    public class Class1
-    {
+﻿namespace Instagram.Bll;
 
-    }
+public class Class1
+{
+
 }

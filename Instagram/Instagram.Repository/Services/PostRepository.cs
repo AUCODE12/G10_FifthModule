@@ -20,9 +20,13 @@ public class PostRepository : IPostRepository
         return post.PostId;
     }
 
+    public async Task<List<Post>> GetAllPostsAsync(bool includeComment = false)
+    {
+        // queriable, ienimurable
+        var postsQuery = MainContext.Posts.AsQueryable();
 
     public async Task<List<Post>> GetAllPostsAsync()
-    {
+        {
         return await MainContext.Posts
             .Include(p => p.Comments)
             .ToListAsync();   
