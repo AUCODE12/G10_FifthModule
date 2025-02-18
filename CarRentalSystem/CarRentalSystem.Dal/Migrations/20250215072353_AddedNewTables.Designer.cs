@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRentalSystem.Dal.Migrations
 {
     [DbContext(typeof(MainContext))]
-    [Migration("20250213071214_InitialCreation")]
-    partial class InitialCreation
+    [Migration("20250215072353_AddedNewTables")]
+    partial class AddedNewTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace CarRentalSystem.Dal.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("BookingId"));
+
+                    b.Property<int>("BookingStatus")
+                        .HasColumnType("int");
 
                     b.Property<long>("CarId")
                         .HasColumnType("bigint");
@@ -70,8 +73,8 @@ namespace CarRentalSystem.Dal.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("CreatedYear")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("CreatedYear")
+                        .HasColumnType("int");
 
                     b.Property<string>("Model")
                         .IsRequired()
@@ -84,6 +87,37 @@ namespace CarRentalSystem.Dal.Migrations
                     b.HasKey("CarId");
 
                     b.ToTable("Car", (string)null);
+                });
+
+            modelBuilder.Entity("CarRentalSystem.Dal.Entities.Cart", b =>
+                {
+                    b.Property<long>("CartId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("CartId"));
+
+                    b.HasKey("CartId");
+
+                    b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("CarRentalSystem.Dal.Entities.CartProduct", b =>
+                {
+                    b.Property<long>("CartId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Quentity")
+                        .HasColumnType("int");
+
+                    b.HasKey("CartId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CartProduct", (string)null);
                 });
 
             modelBuilder.Entity("CarRentalSystem.Dal.Entities.Customer", b =>
@@ -141,6 +175,19 @@ namespace CarRentalSystem.Dal.Migrations
                     b.ToTable("Payments");
                 });
 
+            modelBuilder.Entity("CarRentalSystem.Dal.Entities.Product", b =>
+                {
+                    b.Property<long>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ProductId"));
+
+                    b.HasKey("ProductId");
+
+                    b.ToTable("Products");
+                });
+
             modelBuilder.Entity("CarRentalSystem.Dal.Entities.Review", b =>
                 {
                     b.Property<long>("ReviewId")
@@ -189,6 +236,25 @@ namespace CarRentalSystem.Dal.Migrations
                     b.Navigation("Customer");
                 });
 
+            modelBuilder.Entity("CarRentalSystem.Dal.Entities.CartProduct", b =>
+                {
+                    b.HasOne("CarRentalSystem.Dal.Entities.Cart", "Cart")
+                        .WithMany("CartProducts")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarRentalSystem.Dal.Entities.Product", "Product")
+                        .WithMany("CartProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("CarRentalSystem.Dal.Entities.Payment", b =>
                 {
                     b.HasOne("CarRentalSystem.Dal.Entities.Booking", "Booking")
@@ -231,11 +297,21 @@ namespace CarRentalSystem.Dal.Migrations
                     b.Navigation("Reviews");
                 });
 
+            modelBuilder.Entity("CarRentalSystem.Dal.Entities.Cart", b =>
+                {
+                    b.Navigation("CartProducts");
+                });
+
             modelBuilder.Entity("CarRentalSystem.Dal.Entities.Customer", b =>
                 {
                     b.Navigation("Bookings");
 
                     b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("CarRentalSystem.Dal.Entities.Product", b =>
+                {
+                    b.Navigation("CartProducts");
                 });
 #pragma warning restore 612, 618
         }

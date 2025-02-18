@@ -1,4 +1,6 @@
-﻿namespace CarRentalSystem.Dal.Entities;
+﻿using CarRentalSystem.Dal.Enums;
+
+namespace CarRentalSystem.Dal.Entities;
 
 public class Booking
 {
@@ -6,6 +8,8 @@ public class Booking
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public double TotalCost { get; set; }
+
+    public BookingStatus BookingStatus { get; set; }
 
     public long CustomerId { get; set; }
     public Customer Customer { get; set; }

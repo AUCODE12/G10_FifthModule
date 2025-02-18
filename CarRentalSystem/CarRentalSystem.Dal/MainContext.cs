@@ -11,6 +11,9 @@ public class MainContext : DbContext
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<Review> Reviews { get; set; }
     public DbSet<Payment> Payments { get; set; }
+    public DbSet<Cart> Carts { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<CartProduct> CartProducts { get; set; }
 
 
     public MainContext(DbContextOptions<MainContext> options)
@@ -23,6 +26,7 @@ public class MainContext : DbContext
         modelBuilder.ApplyConfiguration(new CustomerConfiguration());
         modelBuilder.ApplyConfiguration(new CarConfiguration());
         modelBuilder.ApplyConfiguration(new BookingConfiguration());
+        modelBuilder.ApplyConfiguration(new CartProductConfiguration());
     }
 }
 

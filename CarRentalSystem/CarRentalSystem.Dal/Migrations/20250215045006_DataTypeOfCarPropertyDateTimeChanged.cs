@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CarRentalSystem.Dal.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreation : Migration
+    public partial class DataTypeOfCarPropertyDateTimeChanged : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,7 @@ namespace CarRentalSystem.Dal.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Model = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Brand = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CreatedYear = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedYear = table.Column<int>(type: "int", nullable: false),
                     PricePerDay = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>

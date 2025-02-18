@@ -1,4 +1,6 @@
 
+using CarRentalSystem.Bll.Services;
+using CarRentalSystem.Repository.Services;
 using Instagram.Server.Configurations;
 
 namespace CarRentalSystem.Api
@@ -17,6 +19,9 @@ namespace CarRentalSystem.Api
             builder.Services.AddSwaggerGen();
 
             builder.ConfigureDatabase();
+
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
 
             var app = builder.Build();
 
