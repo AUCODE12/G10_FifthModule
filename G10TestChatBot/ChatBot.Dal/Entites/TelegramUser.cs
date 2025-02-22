@@ -1,4 +1,4 @@
-﻿namespace G10TestChatBot;
+﻿namespace ChatBot.Dal.Entites;
 
 public class TelegramUser
 {
