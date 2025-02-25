@@ -6,6 +6,6 @@ public interface IUserInfoService
 {
     Task<long> AddUserInfoAsync(UserInfo userInfo);
     Task UpdateUserInfoAsync(UserInfo userInfo);
-    Task<long> GetUserInfoIdByTelegramIdAsync(long telegramId);
-    Task<UserInfo> GetUserInfoByTelegramIdAsync(long telegramId);
+    Task<long> GetUserInfoIdByBotUserIdAsync(long botUserId);
+    Task<UserInfo> GetUserInfoByBotUserIdAsync(long botUserId);
 }

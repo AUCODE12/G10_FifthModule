@@ -29,15 +29,19 @@ public class UserInfoService : IUserInfoService
         return userInfo.UserInfoId;
     }
 
-    public async Task<UserInfo> GetUserInfoByTelegramIdAsync(long telegramId)
+    public async Task<UserInfo> GetUserInfoByBotUserIdAsync(long botUserId)
     {
-        var userInfo = await mainContext.UserInfos.FirstOrDefaultAsync(ui => ui.BotUserId == telegramId);
+        var userInfo = await mainContext.UserInfos.FirstOrDefaultAsync(ui => ui.BotUserId == botUserId);
         return userInfo;
     }
 
-    public Task<long> GetUserInfoIdByTelegramIdAsync(long telegramId)
+    public async Task<long> GetUserInfoIdByBotUserIdAsync(long botUserId)
     {
-        throw new NotImplementedException();
+        var userInfo = await mainContext.UserInfos.FirstOrDefaultAsync(ui => ui.BotUserId == botUserId);
+
+        if (userInfo == null) return 0l;
+ 
+        return userInfo.UserInfoId;
     }
 
     public Task UpdateUserInfoAsync(UserInfo userInfo)

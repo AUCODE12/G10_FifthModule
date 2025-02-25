@@ -1,5 +1,6 @@
 ﻿using ChatBot.Dal;
 using ChatBot.Dal.Entites;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatBot.Bll.Services;
 
@@ -12,14 +13,32 @@ public class EducationService : IEducationService
         this.mainContext = mainContext;
     }
 
-    public Task<long> AddEducationAsync(Education education)
+    public async Task<long> AddEducationAsync(Education education)
     {
-        throw new NotImplementedException();
+        await mainContext.Educations.AddAsync(education);
+        await mainContext.SaveChangesAsync();
+        return education.EducationId;
     }
 
-    public Task<ICollection<Education>> GetEducationsByUserInfoIdAsync(long userInfoId)
+    public async Task DeleteEducationAsync(long id, long userInfoId)
     {
-        throw new NotImplementedException();
+        var education = await mainContext.Educations.FirstOrDefaultAsync(ed => ed.EducationId == id && ed.UserInfoId == userInfoId);
+
+        if(education == null)
+        {
+            throw new Exception($"Education with {id} not found");
+        }
+
+        mainContext.Educations.Remove(education);
+        await mainContext.SaveChangesAsync();
+    }
+
+    public async Task<ICollection<Education>> GetEducationsByUserInfoIdAsync(long userInfoId)
+    {
+        var educations = await mainContext.Educations
+                            .Where(e => e.UserInfoId == userInfoId)
+                            .ToListAsync();
+        return educations ?? new List<Education>();
     }
 
     public Task UpdateEducationAsync(Education education)

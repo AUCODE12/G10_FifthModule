@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using ChatBot.Dal;
-using ChatBot.Dal.Entites;
+﻿using ChatBot.Dal;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
@@ -28,7 +22,7 @@ namespace ChatBot.Bll.Services
 
             var userInfo = _mainContext.UserInfos.FirstOrDefault(u => u.BotUserId == botUserId);
 
-            if(userInfo == null)
+            if (userInfo == null)
             {
 
                 return null;

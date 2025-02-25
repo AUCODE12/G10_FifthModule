@@ -1,5 +1,7 @@
 ﻿using ChatBot.Bll.Services;
+using ChatBot.Dal;
 using ChatBot.Dal.Entites;
+using System.Globalization;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -47,6 +49,7 @@ public class BotListenerService
             var user = update.Message.Chat;
             var message = update.Message;
             var botUserId = await botUserService.GetBotUserIdByTelegramUserIdAsync(user.Id);
+            var userInfoId = await userInfoService.GetUserInfoIdByBotUserIdAsync(botUserId);
 
             if (message.Text == "/start")
             {
@@ -98,7 +101,7 @@ public class BotListenerService
 
             if (message.Text == "User Info")
             {
-                var userInfo = await userInfoService.GetUserInfoByTelegramIdAsync(botUserId);
+                var userInfo = await userInfoService.GetUserInfoByBotUserIdAsync(botUserId);
 
                 var menu = new ReplyKeyboardMarkup()
                 {
@@ -211,8 +214,105 @@ public class BotListenerService
 
             if (message.Text == "Education")
             {
+                var educations = await educationService.GetEducationsByUserInfoIdAsync(userInfoId);
+
+                var educationText = "Your education info below \n\n";
+
+                foreach (var education in educations)
+                {
+                    educationText += $"EducationId : {education.EducationId}\n" +
+                                     $"Institution : {education.Institution}\n\n";
+                }
+
+                var menu = new ReplyKeyboardMarkup(
+                        new KeyboardButton("Add education"),
+                        new KeyboardButton("Delete education"),
+                        new KeyboardButton("Main menu"))
+                {
+                    ResizeKeyboard = true
+                };
+
+                await botClient.SendTextMessageAsync(
+                chatId: user.Id,
+                text: educationText,
+                parseMode: ParseMode.Html,
+                replyMarkup: menu);
 
                 return;
+            }
+
+            if(message.Text == "Add education")
+            {
+                var userInfoText = "Please enter education details in the following format:\n\n" +
+                      "*Institution*\n" +
+                      "*Degree*\n" +
+                      "*StartDate*\n" +
+                      "*EndDate*\n\n" +
+                      
+                      "Example:\n" +
+                      "Add education:\n" +
+                      "TSIOS\n" +
+                      "Bachalor\n" +
+                      "2021-09-01\n" +
+                      "2024-09-01\n";
+
+                await bot.SendTextMessageAsync(
+                chatId: user.Id,
+                text: userInfoText,
+                parseMode: ParseMode.Markdown
+                );
+
+                return;
+            }
+
+            if(message.Text == "Delete education")
+            {
+                await bot.SendTextMessageAsync(
+                chatId: user.Id,
+                text: "Enter education id like this format\n 'Delete educationId : 'place id",
+                parseMode: ParseMode.Markdown
+                );
+
+                return;
+            }
+
+            if(message.Text.StartsWith("Delete educationId : "))
+            {
+                var deletionId = long.Parse(message.Text.Substring(21).Trim());
+
+                await educationService.DeleteEducationAsync(deletionId, userInfoId);
+
+                await bot.SendTextMessageAsync(
+                chatId: user.Id,
+                text: "Education is deleted",
+                parseMode: ParseMode.Markdown
+                );
+
+                return;
+
+            }
+
+            if (message.Text.StartsWith("Add education"))
+            {
+                var educationInfotext = message.Text;
+                var data = educationInfotext.Split("\n");
+                var education = new Education()
+                {
+                    Institution = data[1],
+                    Degree = data[2],
+                    StartDate = DateTime.ParseExact(data[3], "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    EndDate = DateTime.ParseExact(data[4], "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    UserInfoId = userInfoId
+                };
+
+                await educationService.AddEducationAsync(education);
+
+
+                await bot.SendTextMessageAsync(
+                chatId: user.Id,
+                text: "Saved",
+                parseMode: ParseMode.Markdown
+                );
             }
 
             if (message.Text == "Experience")
@@ -269,7 +369,7 @@ public class BotListenerService
 
     private async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
-
+        Console.WriteLine(exception.Message);
     }
 
     private static async Task SendUserInfoMenu(ITelegramBotClient botClient, long userId)
