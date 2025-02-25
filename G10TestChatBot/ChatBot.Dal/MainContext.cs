@@ -6,7 +6,12 @@ namespace ChatBot.Dal;
 
 public class MainContext : DbContext
 {
-    public DbSet<TelegramUser> Users { get; set; }
+    public DbSet<BotUser> Users { get; set; }
+    public DbSet<Education> Educations { get; set; }
+    public DbSet<Skill> Skills { get; set; }
+    public DbSet<Experience> Experiences { get; set; }
+    public DbSet<UserInfo> UserInfos { get; set; }
+    public DbSet<Project> Projects { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -19,6 +24,11 @@ public class MainContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new BotUserConfiguration());
+        modelBuilder.ApplyConfiguration(new EducationConfiguration());
+        modelBuilder.ApplyConfiguration(new ExperienceConfiguration());
+        modelBuilder.ApplyConfiguration(new SkillConfiguration());
+        modelBuilder.ApplyConfiguration(new UserInfoConfiguration());
+        modelBuilder.ApplyConfiguration(new ProjectConfiguration());
     }
 }

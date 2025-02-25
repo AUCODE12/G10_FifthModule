@@ -4,6 +4,7 @@ using ChatBot.Dal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatBot.Dal.Migrations
 {
     [DbContext(typeof(MainContext))]
-    partial class MainContextModelSnapshot : ModelSnapshot
+    [Migration("20250223101333_test1")]
+    partial class test1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,36 +128,6 @@ namespace ChatBot.Dal.Migrations
                     b.ToTable("Experience", (string)null);
                 });
 
-            modelBuilder.Entity("ChatBot.Dal.Entites.Project", b =>
-                {
-                    b.Property<long>("ProjectId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ProjectId"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("EndingTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StartingTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("UserInfoId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("ProjectId");
-
-                    b.HasIndex("UserInfoId");
-
-                    b.ToTable("Project", (string)null);
-                });
-
             modelBuilder.Entity("ChatBot.Dal.Entites.Skill", b =>
                 {
                     b.Property<long>("SkillId")
@@ -205,9 +178,6 @@ namespace ChatBot.Dal.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Summary")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("UserInfoId");
 
                     b.HasIndex("BotUserId")
@@ -231,17 +201,6 @@ namespace ChatBot.Dal.Migrations
                 {
                     b.HasOne("ChatBot.Dal.Entites.UserInfo", "UserInfo")
                         .WithMany("Experiences")
-                        .HasForeignKey("UserInfoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserInfo");
-                });
-
-            modelBuilder.Entity("ChatBot.Dal.Entites.Project", b =>
-                {
-                    b.HasOne("ChatBot.Dal.Entites.UserInfo", "UserInfo")
-                        .WithMany("Projects")
                         .HasForeignKey("UserInfoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -282,8 +241,6 @@ namespace ChatBot.Dal.Migrations
                     b.Navigation("Educations");
 
                     b.Navigation("Experiences");
-
-                    b.Navigation("Projects");
 
                     b.Navigation("Skills");
                 });

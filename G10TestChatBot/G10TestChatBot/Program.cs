@@ -1,4 +1,4 @@
-﻿using ChatBot.Bll.UserService;
+﻿using ChatBot.Bll.Services;
 using ChatBot.Dal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +18,12 @@ internal class Program
 
         var serviceCollection = new ServiceCollection();
 
-        serviceCollection.AddScoped<IUserService, UserService>();
+        serviceCollection.AddScoped<IBotUserService, BotUserService>();
+        serviceCollection.AddScoped<IEducationService, EducationService>();
+        serviceCollection.AddScoped<IExperienceService, ExperienceService>();
+        serviceCollection.AddScoped<ISkillService, SkillService>();
+        serviceCollection.AddScoped<IUserInfoService, UserInfoService>();
+        serviceCollection.AddScoped<IFileService, PdfService>();
         serviceCollection.AddSingleton<BotListenerService>();
         serviceCollection.AddSingleton<MainContext>();
 
