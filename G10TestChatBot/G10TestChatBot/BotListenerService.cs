@@ -11,7 +11,7 @@ namespace G10TestChatBot;
 
 public class BotListenerService
 {
-    private static string botToken = "7708587992:AAGGPGjZt9iEGec9iYGxbAEtvkivo5bhg4g";
+    private static string botToken = "";
     private TelegramBotClient botClient = new TelegramBotClient(botToken);
     private readonly IBotUserService botUserService;
     private readonly IUserInfoService userInfoService;
