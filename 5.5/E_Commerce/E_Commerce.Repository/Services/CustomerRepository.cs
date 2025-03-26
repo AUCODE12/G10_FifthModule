@@ -13,14 +13,23 @@ public class CustomerRepository : ICustomerRepository
         MainContext = mainContext;
     }
 
-    public Task<long> AddCustomerAsync(Customer customer)
+    public async Task<long> AddCustomerAsync(Customer customer)
     {
-        throw new NotImplementedException();
+        await MainContext.Customers.AddAsync(customer);
+        await MainContext.SaveChangesAsync();
+        return customer.CustomerId;
     }
 
-    public Task DeleteCustomerAsync(long customerId)
+    public async Task DeleteCustomerAsync(long customerId)
     {
-        throw new NotImplementedException();
+        var customer = await GetCustomerByCustomerIdAsync(customerId);
+        MainContext.Customers.Remove(customer);
+        await MainContext.SaveChangesAsync();
+    }
+
+    public async Task<ICollection<Customer>> GetAllCustomers()
+    {
+        return await MainContext.Customers.ToListAsync();
     }
 
     public async Task<Customer> GetCustomerByCustomerIdAsync(long customerId)
@@ -29,13 +38,15 @@ public class CustomerRepository : ICustomerRepository
         return customer;
     }
 
-    public Task<Customer> GetCustomerByEmailAsync(string email)
+    public async Task<Customer> GetCustomerByEmailAsync(string email)
     {
-        throw new NotImplementedException();
+        var customers = await GetAllCustomers();
+        return customers.FirstOrDefault(c => c.Email == email);
     }
 
     public Task UpdateCustomerAsync(Customer updatedCustomer)
     {
-        throw new NotImplementedException();
+        MainContext.Customers.Update(updatedCustomer);
+        return MainContext.SaveChangesAsync();
     }
 }

@@ -8,5 +8,7 @@ public interface ICartProductRepository
 
     //Task<CartProduct> GetCartProductByCartProductIdAsync(long cartProductId);
     Task<CartProduct> GetCartProductByCartIdAndProductIdAsync(long cartId, long productId);
+    Task<ICollection<CartProduct>> GetCartProductByCustomerId(long cartId);
     Task UpdateCartProductAsync(CartProduct updatedCartProduct);
+    Task<decimal> GetTotalAmountByCartIdAsync(long cartId);
 }

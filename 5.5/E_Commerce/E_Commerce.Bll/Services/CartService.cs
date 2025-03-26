@@ -1,6 +1,6 @@
-﻿
-using E_Commerce.Dal.Entites;
+﻿using E_Commerce.Dal.Entites;
 using E_Commerce.Repository.Services;
+using System.Linq;
 
 namespace E_Commerce.Bll.Services;
 
@@ -57,10 +57,34 @@ public class CartService : ICartService
 
     public async Task ClearCartAsync(long customerId)
     {
-        var cart = await CartRepository.GetCartByCustomerIdAsync(customerId);
-        if (cart is not null)
+        var customer = await CustomerRepository.GetCustomerByCustomerIdAsync(customerId);
+        if (customer is null)
         {
-            await CartRepository.ClearCartAsync(customerId);
+            throw new Exception("Customer not found");
         }
+        var cart = await CartRepository.GetCartByCustomerIdAsync(customerId);
+        if (cart is null)
+        {
+            throw new Exception("Cart not found by CustomerId (ClearCart)");
+        }
+        await CartRepository.ClearCartAsync(customerId);
+    }
+
+    public async Task<decimal> GetTotalAmountByCart(long customerId)
+    {
+        var customer = await CustomerRepository.GetCustomerByCustomerIdAsync(customerId);
+        if (customer is null)
+        {
+            throw new Exception("Customer not found");
+        }
+        var cart = await CartRepository.GetCartByCustomerIdAsync(customerId);
+        if (cart is null)
+        {
+            throw new Exception("Cart not found by CustomerId");
+        }
+        var cartProducts = await CartProductRepository.GetCartProductByCustomerId(cart.CartId);
+        var totalSum = cartProducts.Sum(cp => cp.Quantity * cp.Product.Price);
+        return totalSum;
+        //return await CartProductRepository.GetTotalAmountByCartIdAsync(cart.CartId);
     }
 }

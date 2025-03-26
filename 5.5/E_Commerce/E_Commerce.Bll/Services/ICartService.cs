@@ -5,4 +5,5 @@ public interface ICartService
     Task AddProductToCartAsync(long customerId, long ProductId, int quantity);
     Task ClearCartAsync(long customerId);
 
+    Task<decimal> GetTotalAmountByCart(long customerId);
 }

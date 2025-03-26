@@ -27,6 +27,18 @@ public class CartProductRepository : ICartProductRepository
         return cartProduct;
     }
 
+    public async Task<ICollection<CartProduct>> GetCartProductByCustomerId(long cartId)
+    {
+        var cartProduct = MainContext.CartProducts.Where(cp => cp.CartId == cartId).ToList();
+        return cartProduct;
+    }
+
+    public async Task<decimal> GetTotalAmountByCartIdAsync(long cartId)
+    {
+        var totalAmount = await MainContext.CartProducts.Where(cp => cp.CartId == cartId).SumAsync(cp => cp.Quantity * cp.Product.Price);
+        return totalAmount;
+    }
+
     public async Task UpdateCartProductAsync(CartProduct updatedCartProduct)
     {
         MainContext.CartProducts.Update(updatedCartProduct);
