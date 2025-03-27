@@ -23,5 +23,13 @@ public class MainContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Order>().ToTable("Orders");
+        modelBuilder.Entity<Product>().ToTable("Product");
+        modelBuilder.Entity<Customer>().ToTable("Customer");
+        modelBuilder.Entity<Cart>().ToTable("Cart");
+        modelBuilder.Entity<Card>().ToTable("Card");
+        modelBuilder.Entity<CartProduct>().ToTable("CartProduct");
+        modelBuilder.Entity<OrderProduct>().ToTable("OrderProduct");
+        modelBuilder.Entity<Payment>().ToTable("Payment");
+        modelBuilder.Entity<OrderStatus>().ToTable("OrderStatus");
     }
 }

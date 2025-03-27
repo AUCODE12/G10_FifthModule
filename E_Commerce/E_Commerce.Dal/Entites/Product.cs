@@ -1,7 +1,10 @@
-﻿namespace E_Commerce.Dal.Entites;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace E_Commerce.Dal.Entites;
 
 public class Product
 {
+    [Key]
     public long ProductId { get; set; }
     public string Name { get; set; }
     public decimal Price { get; set; }

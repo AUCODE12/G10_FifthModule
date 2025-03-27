@@ -49,8 +49,23 @@ public class CartRepository : ICartRepository
 
     public async Task<Cart?> GetCartByCustomerIdAsync(long customerId)
     {
-        var cart = await MainContext.Carts.FirstOrDefaultAsync(c => c.CustomerId == customerId);
-        return cart;
+        var carts = await MainContext.Carts.Where(c => c.CustomerId == customerId).ToListAsync();
+        
+        if(carts == null || carts.Count == 0) return null;
+
+        if(carts.Count == 1) return carts[0];
+
+        var cart = carts.Max(c => c.CartId);
+
+        foreach( var cartItem in carts)
+        {
+            if(cartItem.CartId != cart)
+            {
+                await DeleteCartAsync(cartItem.CartId);
+            }
+        }
+
+        return carts[0];
     }
 
     public async Task UpdateCartAsync(Cart cart)

@@ -1,7 +1,10 @@
-﻿namespace E_Commerce.Dal.Entites;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace E_Commerce.Dal.Entites;
 
 public class Customer
 {
+    [Key]
     public long CustomerId { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
