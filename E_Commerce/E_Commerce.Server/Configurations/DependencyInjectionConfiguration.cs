@@ -1,5 +1,4 @@
 ﻿using E_Commerce.Bll.Services;
-using E_Commerce.Dal;
 using E_Commerce.Repository.Services;
 
 namespace E_Commerce.Server.Configurations;
