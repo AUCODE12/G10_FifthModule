@@ -1,7 +1,10 @@
-﻿namespace E_Commerce.Dal.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace E_Commerce.Dal.Entities;
 
 public class Cart
 {
+    [Key]
     public long CartId { get; set; }
     public long CustomerId { get; set; }
     public DateTime CreatedAt { get; set; }

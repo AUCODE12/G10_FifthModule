@@ -1,7 +1,10 @@
-﻿namespace E_Commerce.Dal.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace E_Commerce.Dal.Entities;
 
 public class Order
 {
+    [Key]
     public long OrderId { get; set; }
     public long CustomerId { get; set; }
     public DateTime CreatedAt { get; set; }
