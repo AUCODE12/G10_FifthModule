@@ -1,4 +1,6 @@
-﻿namespace E_Commerce.Bll.Dtos.CartProductDto;
+﻿using E_Commerce.Bll.Dtos.ProductDto;
+
+namespace E_Commerce.Bll.Dtos.CartProductDto;
 
 public class GetCartProductDto
 {
@@ -6,4 +8,5 @@ public class GetCartProductDto
     public int Quantity { get; set; }
     public long CartId { get; set; }
     public long ProductId { get; set; }
+    public GetProductDto GetProductDto { get; set; }
 }

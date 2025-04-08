@@ -1,4 +1,5 @@
-﻿using E_Commerce.Bll.Services;
+﻿using E_Commerce.Bll.Dtos.CartDto;
+using E_Commerce.Bll.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,5 +20,11 @@ public class CartController : ControllerBase
     public async Task AddProduct(long customerId, long productId, int quantity)
     {
         await CartService.AddProductToCardAsync(customerId, productId, quantity);
+    }
+
+    [HttpGet("get")]
+    public async Task<GetCartDto> GetCart(long customerId)
+    {
+        return await CartService.GetCartByCustomerIdAsync(customerId);
     }
 }

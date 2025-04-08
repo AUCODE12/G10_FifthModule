@@ -1,9 +1,18 @@
-﻿using E_Commerce.Dal.Entities;
+﻿using E_Commerce.Dal;
+using E_Commerce.Dal.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Repository.Services;
 
 public class CardRepository : ICardRepository
 {
+    private readonly MainContext MainContext;
+
+    public CardRepository(MainContext mainContext)
+    {
+        MainContext = mainContext;
+    }
+
     public Task AssignCardAsNotSelectedAsync(long cardId)
     {
         throw new NotImplementedException();
@@ -19,7 +28,7 @@ public class CardRepository : ICardRepository
         throw new NotImplementedException();
     }
 
-    public Task<List<Card>> GetCardByCustomerIdAsync(long customerId)
+    public Task<List<Card>> SelectCardsByCustomerIdAsync(long customerId)
     {
         throw new NotImplementedException();
     }
@@ -29,8 +38,10 @@ public class CardRepository : ICardRepository
         throw new NotImplementedException();
     }
 
-    public Task<Card> SelectSelectedCardByCustomerIdAsync(long customerId)
+    public async Task<Card?> SelectSelectedCardByCustomerIdAsync(long customerId)
     {
-        throw new NotImplementedException();
+        var card = await MainContext.Cards.FirstOrDefaultAsync(c => c.CustomerId == customerId && c.SelectedForPayment == true);
+
+        return card;
     }
 }

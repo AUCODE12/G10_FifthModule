@@ -1,4 +1,5 @@
 ﻿using E_Commerce.Bll.Services;
+using E_Commerce.PaymentBroker.Services;
 using E_Commerce.Repository.Services;
 
 namespace E_Commerce.Server.Configurations;
@@ -17,9 +18,13 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IProductRepository, ProductRepository>();
 
         services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IOrderProductRepository, OrderProductRepository>();
 
         services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<ICustomerService, CustomerService>();
 
         services.AddScoped<IPaymentRepository, PaymentRepository>();
+        services.AddScoped<IPaymentService, PaymentService>();
     }
 }

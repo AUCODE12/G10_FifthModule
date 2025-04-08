@@ -1,6 +1,9 @@
 ﻿using E_Commerce.Bll.Dtos.CartDto;
+using E_Commerce.Bll.Dtos.CartProductDto;
+using E_Commerce.Bll.Dtos.ProductDto;
 using E_Commerce.Dal.Entities;
 using E_Commerce.Repository.Services;
+using System.Threading.Tasks;
 
 namespace E_Commerce.Bll.Services;
 
@@ -61,8 +64,65 @@ public class CartService : ICartService
         }
     }
 
-    public Task<GetCartDto> GetCartByCustomerIdAsync(long customerId)
+    public async Task<GetCartDto> GetCartByCustomerIdAsync(long customerId)
     {
-        throw new NotImplementedException();
+        var customer = await CustomerRepository.SelectCustomerByIdAsync(customerId);
+        if (customer is null) throw new Exception("Customer not found found in GetCartByCustomerIdAsync");
+
+        var cart = await CartRepository.GetCartByCustomerIdAsync(customerId, true);
+        if (cart is null) throw new Exception("Cart is empty in GetCartByCustomerIdAsync");
+        
+        var getCartDto = new GetCartDto()
+        {
+            CartId = cart.CartId,
+            CustomerId = cart.CustomerId,
+            CreatedAt = cart.CreatedAt,
+            TotalPrice = cart.CartProducts.Sum(c => c.Quantity * c.Product.Price),
+            GetCartProductDtos = cart.CartProducts.Select(c => ConvertCartProductToDto(c)).ToList()
+        };
+
+        return getCartDto;
     }
+
+    private GetCartProductDto ConvertCartProductToDto(CartProduct cartProduct)
+    {
+        var getCartProductDto = new GetCartProductDto()
+        {
+            CartProductId = cartProduct.CartProductId,
+            Quantity = cartProduct.Quantity,
+            CartId = cartProduct.CartId,
+            ProductId = cartProduct.ProductId,
+            GetProductDto = ConvertProductToDto(cartProduct.Product)
+        };
+
+        return getCartProductDto;
+    }
+
+    private GetProductDto ConvertProductToDto(Product product)
+    {
+        var getProductDto = new GetProductDto()
+        {
+            ProductId = product.ProductId,
+            Name = product.Name,
+            Price = product.Price,
+            StockQuantity = product.StockQuantity,
+            ImageLink = product.ImageLink
+        };
+
+        return getProductDto;
+    }
+
+    //private async Task<decimal> GetTotalPrice(List<CartProduct> cartProducts)
+    //{
+    //    //decimal totalPrice = 0;
+    //    //foreach (var cartProduct in cartProducts)
+    //    //{
+    //    //    var product = await ProductRepository.SelectProductByIdAsync(cartProduct.ProductId);
+    //    //    if (product != null)
+    //    //    {
+    //    //        totalPrice += product.Price * cartProduct.Quantity;
+    //    //    }
+    //    //}
+    //    //return totalPrice;
+    //}
 }

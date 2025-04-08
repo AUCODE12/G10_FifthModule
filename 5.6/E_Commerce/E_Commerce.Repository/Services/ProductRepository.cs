@@ -24,8 +24,9 @@ public class ProductRepository : IProductRepository
         return product;
     }
 
-    public Task UpdateProductAsync(Product product)
+    public async Task UpdateProductAsync(Product product)
     {
-        throw new NotImplementedException();
+        MainContext.Products.Update(product);
+        await MainContext.SaveChangesAsync();
     }
 }

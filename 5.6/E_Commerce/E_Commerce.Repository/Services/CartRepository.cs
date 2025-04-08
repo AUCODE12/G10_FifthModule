@@ -43,9 +43,27 @@ public class CartRepository : ICartRepository
         await MainContext.SaveChangesAsync();
     }
 
-    public async Task<Cart?> GetCartByCustomerIdAsync(long customerId)
+    public async Task<Cart?> GetCartByCustomerIdAsync(long customerId, bool includeCartProducts = false)
     {
-        var carts = await MainContext.Carts.Where(c => c.CustomerId == customerId).ToListAsync();
+        //var carts = await MainContext.Carts.Where(c => c.CustomerId == customerId).ToListAsync();
+
+        var cartsQuery = MainContext.Carts;
+        List<Cart> carts;
+        if (includeCartProducts is true)
+        {
+            carts = await cartsQuery
+                .Include(c => c.CartProducts)
+                .ThenInclude(cp => cp.Product)
+                .Where(c => c.CustomerId == customerId)
+                .ToListAsync();
+        }
+        else
+        {
+            carts = await cartsQuery
+                .Where(c => c.CustomerId == customerId)
+                .ToListAsync();
+        }
+
         if (carts is null || carts.Count == 0) return null;
         if (carts.Count == 1) return carts[0];
         var cart = carts.Max(c => c.CartId);

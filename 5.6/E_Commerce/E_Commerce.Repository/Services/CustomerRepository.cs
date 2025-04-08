@@ -13,19 +13,24 @@ public class CustomerRepository : ICustomerRepository
         MainContext = mainContext;
     }
 
-    public Task DeleteCustomerByIdAsync(long customerId)
+    public async Task DeleteCustomerByIdAsync(long customerId)
     {
-        throw new NotImplementedException();
+        var customer = await SelectCustomerByIdAsync(customerId);
+        MainContext.Customers.Remove(customer);
+        await MainContext.SaveChangesAsync();
     }
 
-    public Task<long> InsertCustomerAsync(Customer customer)
+    public async Task<long> InsertCustomerAsync(Customer customer)
     {
-        throw new NotImplementedException();
+        await MainContext.Customers.AddAsync(customer);
+        await MainContext.SaveChangesAsync();
+        return await Task.FromResult(customer.CustomerId);
     }
 
-    public Task<List<Customer>> SelectAllCustomersAsync()
+    public async Task<List<Customer>> SelectAllCustomersAsync()
     {
-        throw new NotImplementedException();
+        var customers = await MainContext.Customers.ToListAsync();
+        return customers;
     }
 
     public async Task<Customer?> SelectCustomerByIdAsync(long customerId)
@@ -34,8 +39,9 @@ public class CustomerRepository : ICustomerRepository
         return customer;
     }
 
-    public Task UpdateCustomerAsync(Customer customer)
+    public async Task UpdateCustomerAsync(Customer customer)
     {
-        throw new NotImplementedException();
+        MainContext.Customers.Update(customer);
+        await MainContext.SaveChangesAsync();
     }
 }
